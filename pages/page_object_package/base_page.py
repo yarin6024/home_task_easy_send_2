@@ -1,5 +1,6 @@
 from selenium.common import TimeoutException
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.expected_conditions import visibility_of_all_elements_located
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from pages.page_object_package.driver import Driver
@@ -28,8 +29,9 @@ class BasePage:
     def find_element(self, locator, timeout:int = 10) -> WebElement:
         return self.get_wait(timeout).until(EC.presence_of_element_located(locator))
 
-    def find_elements(self, locator, timeout: int=10) -> [WebElement]:
-        return self.get_wait(timeout).until(EC.presence_of_all_elements_located(locator))
+    def find_elements(self, locator, timeout: int=10, visibility:bool =False) -> [WebElement]:
+        return self.get_wait(timeout).until(visibility_of_all_elements_located(locator)
+                                            if visibility else EC.presence_of_all_elements_located(locator))
 
     def do_element_exist(self, locator, timeout=10) -> bool:
         try:
